@@ -24,16 +24,21 @@ public class RegistroDividaDTO
     [StringLength(maximumLength: 500, ErrorMessage = "O campo de Observações deve conter no máximo 500 letras.")]
     public string? Observacoes { get; set; } = string.Empty;
 
-    public RegistroDividaDTO(Guid idRegistro, string tituloRegistro, double valorRegistro, DateOnly dataDeVencimento, string? observacoes) 
-    { 
+    public RegistroDividaDTO(RegistroDivida registroDivida)
+    {
+        IdRegistro = registroDivida.IdRegistro;
+        TituloRegistro = registroDivida.TituloRegistro;
+        ValorRegistro = registroDivida.ValorRegistro;
+        DataDeVencimento = registroDivida.DataDeVencimento;
+        Observacoes = registroDivida.Observacoes;
+    }
+
+    public RegistroDividaDTO(Guid idRegistro, string tituloRegistro, double valorRegistro, DateOnly dataDeVencimento, string? observacoes)
+    {
         IdRegistro = idRegistro;
         TituloRegistro = tituloRegistro;
         ValorRegistro = valorRegistro;
         DataDeVencimento = dataDeVencimento;
         Observacoes = observacoes;
     }
-
-    public RegistroDivida ToRegistroDivida() =>
-        new RegistroDivida(IdRegistro, TituloRegistro, ValorRegistro, DataDeVencimento, Observacoes);
-
 }
