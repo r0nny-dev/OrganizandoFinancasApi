@@ -19,11 +19,8 @@ public class RegistroDividaRepository : IRegistroDividaRepository
 
     public IEnumerable<RegistroDividaDTO> GetAll()
     {
-        var RegistroDividas = _dbSet.Select(x =>
-            new RegistroDividaDTO(
-                x.IdRegistro, x.TituloRegistro,
-                x.ValorRegistro, x.DataDeVencimento,
-                x.Observacoes)
+        var RegistroDividas = _dbSet.Select(registroDivida =>
+            new RegistroDividaDTO(registroDivida)
         ).ToList();
 
         return RegistroDividas;
@@ -36,11 +33,7 @@ public class RegistroDividaRepository : IRegistroDividaRepository
         if (registroDivida == null)
             return null;
 
-        return new RegistroDividaDTO(registroDivida.IdRegistro,
-                                     registroDivida.TituloRegistro,
-                                     registroDivida.ValorRegistro,
-                                     registroDivida.DataDeVencimento,
-                                     registroDivida.Observacoes);
+        return new RegistroDividaDTO(registroDivida);
     }
 
     public void Insert(RegistroDividaDTO registroDividaDTO)
