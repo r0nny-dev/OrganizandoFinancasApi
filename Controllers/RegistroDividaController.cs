@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using OrganizingFinances.DTOs;
-using OrganizingFinances.Entities;
-using OrganizingFinances.Repositories;
+
 using OrganizingFinances.Repositories.Interfaces;
 
 namespace OrganizingFinances.Controllers;
+
 
 [ApiController]
 [Route("api/v1/[controller]")]
@@ -17,7 +17,7 @@ public class RegistroDividaController : ControllerBase
         _repository = repository;
     }
 
-    [HttpGet("/")]
+    [HttpGet]
     public ActionResult<IEnumerable<RegistroDividaDTO>> GetAll()
     {
         var registroDividas = _repository.GetAll();
@@ -28,40 +28,42 @@ public class RegistroDividaController : ControllerBase
         return Ok(registroDividas);
     }
 
-    [HttpGet("/{IdRegistro}")]
+    [HttpGet]
+    [Route("{IdRegistro}/")]
     public ActionResult<RegistroDividaDTO> GetById(Guid IdRegistro)
     {
         var registroDividaDTO = _repository.GetById(IdRegistro);
 
         if (registroDividaDTO == null)
             return NotFound("Registro Dívida não encontrado.");
-    
+
         return Ok(registroDividaDTO);
     }
 
-    [HttpPost("/cadastro")]
+    [HttpPost("cadastrar")]
     public IActionResult CreateRegistro([FromBody] RegistroDividaDTO registroDividaDTO)
     {
-        if (registroDividaDTO == null)
+        if ((!ModelState.IsValid) && (registroDividaDTO == null))
             return BadRequest();
 
+        registroDividaDTO.IdRegistro = new Guid();
         _repository.Insert(registroDividaDTO);
 
-        return CreatedAtAction(nameof(CreateRegistro),registroDividaDTO);
+        return CreatedAtAction(nameof(CreateRegistro), registroDividaDTO);
     }
 
-    [HttpPut("/atualizar/{IdRegistro}")]
+    [HttpPut("atualizar/{IdRegistro}")]
     public IActionResult UpdateRegistro(Guid IdRegistro, [FromBody] RegistroDividaDTO registroDividaDTO)
     {
         if ((IdRegistro != registroDividaDTO.IdRegistro) || (registroDividaDTO == null))
             return BadRequest();
-        
+
         _repository.Update(registroDividaDTO);
 
         return NoContent();
     }
 
-    [HttpDelete("/remover/{IdRegistro}")]
+    [HttpDelete("remover/{IdRegistro}")]
     public IActionResult DeleteRegistro(Guid IdRegistro)
     {
         var registroDividaDTO = _repository.GetById(IdRegistro);
