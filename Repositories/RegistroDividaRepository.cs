@@ -21,8 +21,8 @@ public class RegistroDividaRepository : IRegistroDividaRepository
     {
         var RegistroDividas = _dbSet.Select(x =>
             new RegistroDividaDTO(
-                x.IdRegistro,x.TituloRegistro,
-                x.ValorRegistro,x.DataDeVencimento,
+                x.IdRegistro, x.TituloRegistro,
+                x.ValorRegistro, x.DataDeVencimento,
                 x.Observacoes)
         ).ToList();
 
@@ -31,13 +31,6 @@ public class RegistroDividaRepository : IRegistroDividaRepository
 
     public RegistroDividaDTO GetById(Guid IdRegistro)
     {
-        //var RegistroDivida = _dbSet.Select(x =>
-        //   new RegistroDividaDTO(
-        //        x.IdRegistro, x.TituloRegistro,
-        //        x.ValorRegistro, x.DataDeVencimento,
-        //        x.Observacoes) 
-        //).FirstOrDefault(x => x.IdRegistro == IdRegistro);
-
         var registroDivida = _dbSet.FirstOrDefault(x => x.IdRegistro == IdRegistro);
 
         if (registroDivida == null)
@@ -52,15 +45,22 @@ public class RegistroDividaRepository : IRegistroDividaRepository
 
     public void Insert(RegistroDividaDTO registroDividaDTO)
     {
-        registroDividaDTO.IdRegistro = new Guid();
-        _dbSet.Add(registroDividaDTO.ToRegistroDivida());
+        //registroDividaDTO.IdRegistro = new Guid();
+        //_dbSet.Add(registroDividaDTO.ToRegistroDivida());
+        //Save();
+
+        var registro = new RegistroDivida(registroDividaDTO);
+        registro.IdRegistro = new Guid();
+
+        _dbSet.Add(registro);
         Save();
     }
 
-    //Verificar se o devo trocar o DTO por um OBJ normal
     public void Update(RegistroDividaDTO registroDividaDTO)
     {
-        _dbSet.Update(registroDividaDTO.ToRegistroDivida());
+        var registroDivida = new RegistroDivida(registroDividaDTO);
+
+        _dbSet.Update(registroDivida);
         Save();
     }
 
